@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="content-section text-center">
+    <h2 class="mb-4 text-success">Thank You!</h2>
+    <p>Your message has been sent successfully. We’ll get back to you within 3-5 working days.</p>
+    
+    <div class="mt-4">
+        <a href="{% url 'core:contact' %}" class="btn btn-outline-primary">Send Another Message</a>
+        <a href="{% url 'core:home' %}" class="btn btn-outline-secondary ml-2">Return Home</a>
+    </div>
+</div>
+{% endblock content %}
+
+

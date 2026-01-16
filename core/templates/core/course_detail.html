@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+  <h1>{{ course.name }}</h1>
+  <p style="font-weight: bold;">Course Description</p>
+  <p>{{ description }}</p>
+
+  <h2>Modules for this Course</h2>
+  {% if modules %}
+    {% for module in modules %}
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-4 d-flex justify-content-center align-items-center">
+            {% if module.image %}
+              <img src="{{ module.image.url }}" class="img-fluid rounded-start" alt="{{ module.name }}">
+            {% else %}
+              <img src="{% static 'img/default_img.jpg' %}" class="img-fluid rounded-start" alt="Default course image">
+            {% endif %}
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ module.name }} (Code: {{ module.code }})</h5>
+              <p class="card-text">{{ module.description }}</p>
+              <p class="card-text">Category: {{ module.category }}</p>
+              <p class="card-text">Qualification: {{ module.get_qualification_type_display }}</p>
+              <p class="card-text">Mode of Study: {{ module.get_mode_of_study_display }}</p>
+              <p class="card-text">Mode of Delivery: {{ module.get_mode_of_delivery_display }}</p>
+
+              {% if user.is_authenticated %}
+                {% if module in user.registrations.all %}
+                  <p class="text-success">You are registered for this module.</p>
+                  <a href="{% url 'modules:module_detail' module.id %}" class="btn btn-info">View Module</a>
+                  <a href="{% url 'modules:unregister' module.id %}" class="btn btn-danger">Unregister</a>
+                {% else %}
+                  {% if module.availability %}
+                    <a href="{% url 'modules:register' module.id %}" class="btn btn-custom" style="align-self: auto;">Register</a>
+                  {% else %}
+                    <p class="card-text text-danger">This module is not available for registration.</p>
+                  {% endif %}
+                {% endif %}
+              {% else %}
+                <p>Please <a href="{% url 'users:login' %}">login</a> to register.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No modules available for this course.</p>
+  {% endif %}
+{% endblock %}

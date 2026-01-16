@@ -1,0 +1,78 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}{{ module.name }}{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+{% endblock %}
+{% block content %}
+    <h1>{{ module.name }} ({{ module.code }})</h1>
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Description</h3>
+            <p>{{ module.description }}</p>
+            <h3>Details</h3>
+            <ul>
+                <li>Category: {{ module.category }}</li>
+                <li>Qualification Type: {{ module.get_qualification_type_display }}</li>
+                <li>Mode of Study: {{ module.get_mode_of_study_display }}</li>
+                <li>Mode of Delivery: {{ module.get_mode_of_delivery_display }}</li>
+                <li>Credits: {{ module.credits }}</li>
+                <li>Availability: {% if module.availability %}Available{% else %}Not Available{% endif %}</li>
+                <li>Courses: {% for course in module.courses.all %}{{ course.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</li>
+            </ul>
+            <a href="{% url 'modules:module_list' %}" class="btn btn-secondary mt-3">Back to All Modules</a>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-moduleds">
+                {% if module.image %}
+                    <img src="{{ module.image.url }}" class="img-fluid module-details" alt="{{ module.name }}">
+                {% else %}
+                    <img src="{% static 'img/default_img.jpg' %}" class="img-fluid" alt="{{ module.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <div class="justify-content-between align-items-center">
+                        {% if user.is_authenticated %}
+                            <p>Your course: {% if user.groups.first %}{{ user.groups.first.name }}{% else %}None{% endif %}</p>
+                            {% if module.availability and not is_registered %}
+                                <form method="POST" action="{% url 'modules:register' module.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-custom" style="width: 100%;">Register</button>
+                                </form>
+                            {% elif is_registered %}
+                                <p>You are registered for this module.</p>
+                                <form method="POST" action="{% url 'modules:unregister' module.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger" style="width: 100%;">Unregister</button>
+                                </form>
+                            {% else %}
+                                <p>This module is not available for registration.</p>
+                            {% endif %}
+                        {% else %}
+                            <p>Please <a href="{% url 'users:login' %}">login</a> to register for this module.</p>
+                        {% endif %}
+                    </div>
+                    <hr>
+                    <h5>This course includes</h5>
+                    <p><img src="{% static 'icons/cube.png' %}" alt="Cube Icon" class="img-icon">Certification of completion</p>
+                    <p><img src="{% static 'icons/online-education.png' %}" alt="Online Education Icon" class="img-icon">{{ module.credits }} credit{{ module.credits|pluralize }}</p>
+                    <p><img src="{% static 'icons/responsive-2.png' %}" alt="Responsive Icon" class="img-icon">Access on all devices</p>
+                    <hr>
+                    <h5>Share this course</h5>
+                    <div class="share-icons">
+                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text=Check out {{ module.name|urlencode }} ({{ module.code|urlencode }}) - {{ module.description|slice:":100"|urlencode }}" target="_blank"><img src="{% static 'icons/twitter.png' %}" alt="Twitter Icon" class="img-icon" /></a>
+                        <a href="https://api.whatsapp.com/send?text=Check out {{ module.name|urlencode }} ({{ module.code|urlencode }}) - {{ module.description|slice:":100"|urlencode }} {{ request.build_absolute_uri|urlencode }}" target="_blank"><img src="{% static 'icons/whatsapp.png' %}" alt="WhatsApp Icon" class="img-icon" /></a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}" target="_blank"><img src="{% static 'icons/linkedin.png' %}" alt="LinkedIn Icon" class="img-icon" /></a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" target="_blank"><img src="{% static 'icons/facebook-icon.png' %}" alt="Facebook Icon" class="img-icon" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

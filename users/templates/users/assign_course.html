@@ -1,0 +1,37 @@
+{% extends "core/base.html" %} 
+
+{% block content %} 
+<div class="card-box mt-5">
+    <h1>Assign Course to User</h1>
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label for="username">User:</label>
+        <select name="username" id="username" required>
+            <option value="">Select a user</option>
+            {% for user in users %}
+                <option value="{{ user.username }}">{{ user.username }} ({{ user.groups.first.name|default:"No course" }})</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="course">Course:</label>
+        <select name="course" id="course" required>
+            <option value="">Select a course</option>
+            {% for course in courses %}
+                <option value="{{ course.name }}">{{ course.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit" class="btn btn-custom">Assign Course</button>
+    </form>
+    <a href="{% url 'modules:module_list' %}">Back to Modules</a>
+
+</div>
+
+{% endblock %}

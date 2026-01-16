@@ -1,0 +1,74 @@
+{% extends "core/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container mt-5">
+
+    <div class="row">
+        <!-- Contact Information -->
+        <div class="col-md-4">
+            <div class="card p-4 mb-0" style="background-color: #24294F; color: white; height: 100%;">
+                <h4 style="color: white; font-weight: bold;">Contact information</h4>
+                <p><i class="fas fa-phone"></i> +44 5045122345</p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:Admin@modulehub.com" style="color: white;">Admin@modulehub.com</a></p>
+                <p><i class="fas fa-map-marker-alt"></i> Howard St, Sheffield City Centre, Sheffield S1 IWB</p>
+            </div>
+        </div>
+
+        <!-- Send Message Form -->
+        <div class="col-md-8">
+            <form method="POST" enctype="multipart/form-data" class="border p-4">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="phone_number">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone_number" name="phone_number">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="subject">Subject</label>
+                        <input type="text" class="form-control" id="subject" name="subject" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+                </div>
+                <div class="form-group col-md-6 p-0">
+                    <label for="role">Role</label>
+                    <select class="form-control" id="role" name="role">
+                        <option value="Select" >Select your role</option>
+                        <option value="student">Student</option>
+                        <option value="staff">Staff</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Send Message Button aligned right -->
+                <div class="form-group text-right mt-3">
+                    <button type="submit" class="btn btn-warning text-white">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="row mt-4">
+        <div class="col-12 p-0">
+            <iframe
+                width="100%" height="380" style="border:0; display:block;" loading="lazy" allowfullscreen
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d940.668376665709!2d-1.4690427!3d53.3784781!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487982831b2243e9%3A0x37add1086f57be4f!2sSheffield%20Hallam%20University!5e0!3m2!1sen!2suk!4v1690000000000!5m2!1sen!2suk">
+            </iframe>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

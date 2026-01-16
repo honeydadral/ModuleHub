@@ -1,0 +1,37 @@
+{% extends "core/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="content-section"> 
+
+  <div class="media"> 
+
+   <p><img class="rounded-circle account-img" src="{{request.user.profile.image.url}}"></p> 
+
+    <div class="media-body"> 
+
+      <h2 class="account-heading">{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}</h2>
+
+      <p class="text-secondary">{{user.username}}</p> 
+
+      <p class="text-secondary">{{user.email}}</p> 
+
+    </div> 
+
+  </div> 
+
+</div> 
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Mdoule Hub - Profile Details</legend>
+        {{ u_form | crispy }} 
+        {{ p_form | crispy }} 
+    </fieldset>
+    <div class="form-group">
+        <button class="btn btn-custom" type="submit">Update</button>
+    </div>
+</form>
+
+{% endblock content %}

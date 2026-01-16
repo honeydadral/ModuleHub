@@ -1,0 +1,251 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}List of Modules{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <!-- Section 1: Header -->
+        <div class="col-md-12 mb-4">
+            <h1>List of Modules</h1>
+            <p>Explore available modules for registration.</p>
+            <!-- Search Form -->
+            <form method="GET" class="mb-4" id="search-form">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        id="search-input"
+                        class="form-control" 
+                        placeholder="Search by module name or description..." 
+                        value="{{ request.GET.search }}"
+                    >
+                </div>
+            </form>
+        </div>
+        <!-- Section 2: Module List -->
+        <div class="col-md-9 mb-4">
+            <div class="row" id="module-list">
+                {% for module in modules %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            {% if module.image %}
+                                <img src="{{ module.image.url }}" class="card-img-top" alt="{{ module.name }}">
+                            {% else %}
+                                <img src="{% static 'img/default_img.jpg' %}" class="card-img-top" alt="{{ module.name }}">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ module.name }} ({{ module.code }})</h5>
+                                <p class="card-text">{{ module.description|truncatewords:20 }}</p>
+                                <p class="card-text text-muted" style="font-size: 0.9em;">Credits: {{ module.credits }}</p>
+                                <hr>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-muted" style="font-size: 0.9em;">
+                                        {% if module.availability %}
+                                            Available
+                                        {% else %}
+                                            Not Available
+                                        {% endif %}
+                                    </span>
+                                    <a href="{% url 'modules:module_detail' module.id %}" class="btn btn-custom">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No modules found matching your search criteria.</p>
+                {% endfor %}
+            </div>
+            <!-- Pagination -->
+            {% if modules.has_other_pages %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if modules.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ modules.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% for num in modules.paginator.page_range %}
+                            <li class="page-item {% if modules.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if modules.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ modules.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+        <!-- Section 3: Filters -->
+        <div class="col-md-3">
+            <h2>Filter Modules</h2>
+            <form method="GET" id="filter-form">
+                <div class="mb-3">
+                    <input type="hidden" name="search" id="filter-search" value="{{ request.GET.search }}">
+                    <label class="form-label">Category</label><br>
+                    {% for category in categories %}
+                        <div class="form-check">
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                name="category" 
+                                value="{{ category }}" 
+                                id="cat_{{ forloop.counter }}"
+                                {% if category in selected_categories %}checked{% endif %}
+                            >
+                            <label class="form-check-label" for="cat_{{ forloop.counter }}">
+                                {{ category }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                    <label class="form-label">Qualification Type</label><br>
+                    {% for code, label in qualification_types %}
+                        <div class="form-check">
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                name="qualification_type" 
+                                value="{{ code }}" 
+                                id="qual_{{ forloop.counter }}"
+                                {% if code in selected_qualifications %}checked{% endif %}
+                            >
+                            <label class="form-check-label" for="qual_{{ forloop.counter }}">
+                                {{ label }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                    <label class="form-label">Mode of Study</label><br>
+                    {% for value, label in mode_of_study %}
+                        <div class="form-check">
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                name="mode_of_study" 
+                                value="{{ value }}" 
+                                id="study_{{ forloop.counter }}"
+                                {% if value in selected_mode_of_study %}checked{% endif %}
+                            >
+                            <label class="form-check-label" for="study_{{ forloop.counter }}">
+                                {{ label }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                    <label class="form-label">Mode of Delivery</label><br>
+                    {% for value, label in mode_of_delivery %}
+                        <div class="form-check">
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                name="mode_of_delivery" 
+                                value="{{ value }}" 
+                                id="delivery_{{ forloop.counter }}"
+                                {% if value in selected_mode_of_delivery %}checked{% endif %}
+                            >
+                            <label class="form-check-label" for="delivery_{{ forloop.counter }}">
+                                {{ label }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-custom">Apply Filter</button>
+            </form>
+        </div>
+    </div>
+    <!-- JavaScript for AJAX live search with debounce -->
+    <script>
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Function to update module list
+        function updateModuleList() {
+            const searchQuery = document.getElementById('search-input').value;
+            const filterForm = document.getElementById('filter-form');
+            const formData = new FormData(filterForm);
+            formData.set('search', searchQuery);
+            const page = new URLSearchParams(window.location.search).get('page') || 1;
+
+            const url = new URL(window.location);
+            url.search = new URLSearchParams(formData).toString();
+            url.searchParams.set('page', page);
+
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const moduleList = document.getElementById('module-list');
+                moduleList.innerHTML = '';
+
+                if (data.modules.length === 0) {
+                    moduleList.innerHTML = '<p>No modules found matching your search criteria.</p>';
+                    return;
+                }
+
+                data.modules.forEach(module => {
+                    const moduleCard = `
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <img src="${module.image}" class="card-img-top" alt="${module.name}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${module.name}</h5>
+                                    <p class="card-text">${module.description}</p>
+                                    <p class="card-text text-muted" style="font-size: 0.9em;">Credits: ${module.credits}</p>
+                                    <hr>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="text-muted" style="font-size: 0.9em;">
+                                            ${module.availability ? 'Available' : 'Not Available'}
+                                        </span>
+                                        <a href="${module.detail_url}" class="btn btn-custom">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    moduleList.insertAdjacentHTML('beforeend', moduleCard);
+                });
+
+                // Update pagination
+                const pagination = document.querySelector('.pagination');
+                if (pagination) {
+                    pagination.innerHTML = '';
+                    if (data.total_pages > 1) {
+                        if (data.current_page > 1) {
+                            pagination.innerHTML += `<li class="page-item"><a class="page-link" href="?page=${data.current_page - 1}&search=${searchQuery}">&laquo;</a></li>`;
+                        }
+                        for (let i = 1; i <= data.total_pages; i++) {
+                            pagination.innerHTML += `<li class="page-item ${i === data.current_page ? 'active' : ''}"><a class="page-link" href="?page=${i}&search=${searchQuery}">${i}</a></li>`;
+                        }
+                        if (data.current_page < data.total_pages) {
+                            pagination.innerHTML += `<li class="page-item"><a class="page-link" href="?page=${data.current_page + 1}&search=${searchQuery}">&raquo;</a></li>`;
+                        }
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching modules:', error));
+
+            document.getElementById('filter-search').value = searchQuery;
+        }
+
+        document.getElementById('search-input').addEventListener('input', debounce(updateModuleList, 300));
+
+        document.getElementById('filter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            updateModuleList();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block content %} 
+<div class="row mt-4 mb-4">
+    <div class="col-6">
+        <h2>Overview</h2>
+        <p class="text-justify">Established to streamline academic administration, SHU’s Module Registration System is a cutting-edge Django web application designed to empower students in their educational journey. This innovative platform supports thousands of students across diverse academic programs, offering seamless module registration and course management. Built on modern cloud technologies, including Azure Virtual Machines, App Services, and Storage account, and enhanced with REST API capabilities, our system ensures accessibility, scalability, and a user-friendly experience for students worldwide.</p>
+    </div>
+    <div class="col-6">
+        <img class="aboutus" src="{% static 'img/about_us_1.jpg' %}" alt="Campus Overview" style="width: 100%; height: auto;">
+    </div>
+</div>
+<div class="row text-center mt-4 mb-4 mission">
+    <div class="col-12">
+        <h3>Our Mission</h3>
+        <p>To transform higher education administration by providing a robust, cloud-supported platform that simplifies module registration, fosters academic flexibility, and equips students with intuitive tools to shape their learning paths.</p>
+    </div>
+</div>
+<div class="row d-flex justify-content-center align-items-center">
+    <img src="{% static 'img/about_us_1.jpg' %}" class="imgabout" alt="Students on Campus">
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="dot"></div>
+                <div class="content left">
+                <h2>More Than Just Registration</h2>
+                <p>At ModuleHub, our Module Registration System redefines how students engage with their academic programs. The platform offers a dynamic interface for browsing modules, managing user profiles, and registering for courses tailored to each student’s program. With features like real-time module filtering, secure user authentication, and programmatic access via REST APIs, students can effortlessly navigate their academic options from any device, supported by Azure’s cloud infrastructure.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="dot"></div>
+                <div class="content right">
+                <h2>Student Activities</h2>
+                <p>Join over 100 student-run clubs and societies — including tech clubs, drama groups, debate teams, and international student associations.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="dot"></div>
+                <div class="content left">
+                <h2>Over 50+ Modules Available</h2>
+                <p>Explore a rich catalog of over 50 modules listed on our platform, spanning diverse disciplines and tailored to various academic programs. From undergraduate to postgraduate courses, part-time or full-time study modes, and online or on-campus delivery.</p>
+                </div>
+            </div>
+            </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="{% static 'icons/favicon.ico' %}">
+
+    <title>Module Hub - {{title}}</title>
+</head>
+<body>
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    <div class="site-wrapper">
+        <header class="site-header">
+            <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+                <div class="container">
+                    <a class="navbar-brand mr-4" href="{% url 'core:core-home' %}"><img class="modulehub" src="{% static 'img/module_hub.png' %}"></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarToggle">
+                        <div class="navbar-nav mr-auto">
+                            <a class="nav-item nav-link {% if request.resolver_match.url_name == 'core-home' %}active{% endif %}" href="{% url 'core:core-home' %}">Home</a>
+                            <a class="nav-item nav-link {% if request.resolver_match.url_name == 'core-about' %}active{% endif %}" href="{% url 'core:core-about' %}">About</a>
+                            <a class="nav-item nav-link {% if request.resolver_match.url_name == 'module_list' %}active{% endif %}" href="{% url 'modules:module_list' %}">Modules</a>
+                            <a class="nav-item nav-link {% if request.resolver_match.url_name == 'core-contact' %}active{% endif %}" href="{% url 'core:core-contact' %}">Contact</a>
+                            {% if user.is_staff %}
+                                <a class="nav-item nav-link {% if request.resolver_match.url_name == 'assign-course' %}active{% endif %}" href="{% url 'users:assign_course' %}">Assign Course</a>
+                            {% endif %}
+                        </div>
+                        <div class="navbar-nav">
+                            <a class="nav-item nav-link" href="javascript:void(0);" id="theme-toggle">
+                                <i id="theme-icon" class="fas fa-moon"></i>
+                            </a>
+
+                            {% if user.is_authenticated %}
+                                <form class="profileform" method="post" id="frm_logout" action="{% url 'users:logout' %}">
+                                    {% csrf_token %}
+                                    <a class="nav-item nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'users:profile' %}">Profile</a>
+                                    <a class="nav-item nav-link" href="javascript:$('#frm_logout').submit();">Logout</a>
+                                </form>
+                            {% else %}
+                                <a class="nav-item nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'users:login' %}">Login</a>
+                                <a class="nav-item nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'core:register' %}">Register</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main class="container">
+            <div class="row">
+                <div class="col-md-12 mb-4">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </main>
+        <footer class="footer text-lg-start bg-body-tertiary text-muted">
+            <section class="">
+                <div class="container text-center text-md-start mt-5">
+                    <div class="row mt-3">
+                        <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
+                            <img class="modulehub mb-4" src="{% static 'img/module_hub.png' %}">
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
+                            <h6 class="text-uppercase fw-bold mb-4 text-white">Products</h6>
+                            <p><a href="{% url 'core:core-home' %}" class="text-reset">Home</a></p>
+                            <p><a href="{% url 'core:core-about' %}" class="text-reset">About</a></p>
+                            <p><a href="{% url 'modules:module_list' %}" class="text-reset">Modules</a></p>
+                            <p><a href="{% url 'core:core-contact' %}" class="text-reset">Contact Us</a></p>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-md-0 mb-4">
+                            <h6 class="text-uppercase fw-bold mb-4 text-white">Contact</h6>
+                            <p><i class="fas fa-home me-3"></i> Howard St, Sheffield City Centre, Sheffield S1 1WB</p>
+                            <p><i class="fas fa-envelope me-3"></i> info@example.com</p>
+                            <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
+                            <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+                © 2025 Copyright: <a class="text-reset fw-bold text-white" href="#">Module Hub</a>
+            </div>
+        </footer>
+    </div>
+    <script>
+  const toggleBtn = document.getElementById("theme-toggle");
+  const themeIcon = document.getElementById("theme-icon");
+
+  function setTheme(mode) {
+    if (mode === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+      themeIcon.classList.remove("fa-moon");
+      themeIcon.classList.add("fa-sun");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+      themeIcon.classList.remove("fa-sun");
+      themeIcon.classList.add("fa-moon");
+    }
+    localStorage.setItem("theme", mode);
+  }
+
+  // Load saved theme
+  const savedTheme = localStorage.getItem("theme") || "light";
+  setTheme(savedTheme);
+
+  // Toggle theme on click
+  toggleBtn.addEventListener("click", () => {
+    const currentTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    setTheme(currentTheme === "dark" ? "light" : "dark");
+  });
+</script>
+
+    <!-- Optional JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

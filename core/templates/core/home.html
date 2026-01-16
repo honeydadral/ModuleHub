@@ -1,0 +1,178 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+  <!-- <h1>Welcome to the Course Registration System</h1> -->
+  <!-- <p>{{ message }}</p> -->
+  <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></li>
+      <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></li>
+      <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="{% static 'img/slide3.png' %}" class="d-block w-100" alt="Slide 1">
+        <div class="carousel-caption d-none d-md-block">
+          <h5 class="slide-head">Welcome to Module Hub</h5>
+          <p>Introducing the Module Hub Registration System and its value proposition.</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="{% static 'img/slide2.jpg' %}" class="d-block w-100" alt="Slide 2">
+        <div class="carousel-caption d-none d-md-block">
+          <h5 class="slide-head">Explore Modules</h5>
+          <p>Highlighting the extensive module catalog (over 50 modules) and filtering capabilities.</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="{% static 'img/slide1.jpg' %}" class="d-block w-100" alt="Slide 3">
+        <div class="carousel-caption d-none d-md-block">
+          <h5 class="slide-head">Empower Your Journey</h5>
+          <p>Emphasizing personalized academic planning and cloud-based accessibility.</p>
+        </div>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </a>
+  </div>
+
+  <!-- Available Courses Section -->
+<h2 class="text-2xl font-bold mb-4 text-center mt-4">Available Courses</h2>
+<div class="col-md-9 mb-4">
+  <div class="row">
+    {% if courses %}
+      {% for course in courses %}
+        <div class="col-md-4 mb-3">
+          <div class="card">
+            <div class="rounded-lg shadow-md overflow-hidden">
+              {% if course.profile.image %}
+                <img src="{{ course.profile.image.url }}" alt="{{ course.name }}" class="card-img-top w-full h-48 object-cover">
+              {% else %}
+                <img src="{% static 'img/default_img.jpg' %}" alt="Default course image" class="card-img-top w-full h-48 object-cover">
+              {% endif %}
+              <div class="card-body">
+                <h3 class="text-lg font-semibold mb-2">{{ course.name }}</h3>
+                <p class="text-gray-600 mb-4">{{ course.profile.description|truncatewords:20 }}</p>
+                <a href="{% url 'core:course_detail' course.pk %}" class="btn btn-custom">View Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <!-- Pagination -->
+  {% if courses.has_other_pages %}
+    <div class="mt-8 flex justify-center">
+      <nav aria-label="Page navigation">
+        <ul class="inline-flex space-x-2">
+          {% if courses.has_previous %}
+            <li>
+              <a href="?page={{ courses.previous_page_number }}" class="px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">Previous</a>
+            </li>
+          {% endif %}
+
+          {% for num in courses.paginator.page_range %}
+            {% if courses.number == num %}
+              <li>
+                <span class="px-3 py-2 bg-blue-600 text-white rounded">{{ num }}</span>
+              </li>
+            {% elif num > courses.number|add:-3 and num < courses.number|add:3 %}
+              <li>
+                <a href="?page={{ num }}" class="px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">{{ num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if courses.has_next %}
+            <li>
+              <a href="?page={{ courses.next_page_number }}" class="px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">Next</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  {% endif %}
+{% else %}
+  <p class="text-gray-600 text-center">No courses are available at the moment.</p>
+{% endif %}
+  </div>
+  <!-- #about -->
+  <div class="row mt-4">
+    <h2>Meet our course leaders</h2>
+  </div>
+   <div class="row vh-100 mt-4 mb-4">
+		<div class="col-sm-6 col-lg-3 my-auto">
+			<div class="box shadow-sm p-4">
+				<div class="image-wrapper mb-3">
+					<img class="img-fluid" src="{% static 'img/professor1.jpg' %}" alt="James" />
+				</div>
+				<div class="box-desc">
+					<h5>Dr. James Bennett</h5>
+          <p>Ph.D. in Computer Science</p>
+				</div>
+				<ul class="social">
+					<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+					<li><a href="#"><i class="fab fa-instagram"></i></a></li>
+					<li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-6 col-lg-3 my-auto">
+			<div class="box shadow-sm p-4">
+				<div class="image-wrapper mb-3">
+					<img class="img-fluid" src="{% static 'img/professor2.jpg' %}" alt="Alan" />
+				</div>
+				<div class="box-desc">
+					<h5>Prof. Alan Cheng</h5>
+          <p>MSc in Data Science</p>
+				</div>
+				<ul class="social">
+					<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+					<li><a href="#"><i class="fab fa-instagram"></i></a></li>
+					<li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-6 col-lg-3 my-auto">
+			<div class="box shadow-sm p-4">
+				<div class="image-wrapper mb-3">
+					<img class="img-fluid" src="{% static 'img/professor3.jpg' %}" alt="Sophia" />
+				</div>
+				<div class="box-desc">
+					<h5>Dr. Sophia Ramirez</h5>
+          <p>Ph.D. in Artificial Intelligence</p>
+				</div>
+				<ul class="social">
+					<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+					<li><a href="#"><i class="fab fa-instagram"></i></a></li>
+					<li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-6 col-lg-3 my-auto">
+			<div class="box shadow-sm p-4">
+				<div class="image-wrapper mb-3">
+					<img class="img-fluid" src="{% static 'img/professor4.jpg' %}" alt="Emily" />
+				</div>
+				<div class="box-desc">
+					<h5>Prof. Emily Turner</h5>
+          <p>MSc in Human-Computer Interaction</p>
+				</div>
+				<ul class="social">
+					<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+					<li><a href="#"><i class="fab fa-instagram"></i></a></li>
+					<li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
+				</ul>
+			</div>
+		</div>
+		
+	</div>
+{% endblock %}
